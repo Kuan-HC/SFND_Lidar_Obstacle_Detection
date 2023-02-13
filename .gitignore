@@ -1,0 +1,6 @@
+# ros build files
+build
+devel
+
+# other
+.vscode
