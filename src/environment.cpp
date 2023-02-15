@@ -41,20 +41,24 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
     // ----------------------------------------------------
 
     // RENDER OPTIONS
-    bool renderScene = true;
+    bool renderScene = false;
     std::vector<Car> cars = initHighway(renderScene, viewer);
 
     // TODO:: Create lidar sensor
     Lidar *roofLidar = new Lidar(cars, 0.0);
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcd = roofLidar->scan();
     // renderRays(viewer, roofLidar->position, pcd);
-    renderPointCloud(viewer, pcd, "pcd_file");
+    // renderPointCloud(viewer, pcd, "pcd_file");
 
     // TODO:: Create point processor
     ProcessPointClouds<pcl::PointXYZ> pcdProcesser;
+    std::pair<typename pcl::PointCloud<pcl::PointXYZ>::Ptr, typename pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = pcdProcesser.SegmentPlane(pcd, 100, 0.2);
+    renderPointCloud(viewer, segmentCloud.first, "obstacle", Color(1, 0, 0));
+    renderPointCloud(viewer, segmentCloud.second, "plane", Color(0, 1, 0));
+
+    // setAngle: SWITCH CAMERA ANGLE {XY, TopDown, Side, FPS}
 }
 
-// setAngle: SWITCH CAMERA ANGLE {XY, TopDown, Side, FPS}
 void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr &viewer)
 {
 

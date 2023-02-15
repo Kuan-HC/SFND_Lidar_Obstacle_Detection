@@ -1,6 +1,7 @@
 # ros build files
 build
 devel
+src/quiz/ransac/build
 
 # other
 .vscode
