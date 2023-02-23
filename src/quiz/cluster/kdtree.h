@@ -35,56 +35,56 @@ struct KdTree
 		delete root;
 	}
 
-	void insertHelper(Node *&node, uint32_t depth, std::vector<float> point, int id)
+	void insertHelper(Node *&node, uint32_t depth, const std::vector<float>& point, const int& id, const int& kDim)
 	{
 		if (node == nullptr)
 			node = new Node(point, id);
 		else
 		{
-			uint8_t idx = depth & 1;
+			uint8_t idx = depth % kDim;
 
 			if (point[idx] < (node->point[idx]))
-				insertHelper(node->left, depth + 1, point, id);
+				insertHelper(node->left, depth + 1, point, id, kDim);
 			else
-				insertHelper(node->right, depth + 1, point, id);
+				insertHelper(node->right, depth + 1, point, id, kDim);
 		}
 	}
 
-	void insert(std::vector<float> point, int id)
+	void insert(const std::vector<float>& point, const int& id)
 	{
 		// TODO: Fill in this function to insert a new point into the tree
 		// the function should create a new node and place correctly with in the root
-		insertHelper(root, 0, point, id);
+		insertHelper(root, 0, point, id, point.size());
 	}
 
 	// return a list of point ids in the tree that are within distance of target
-	std::vector<int> search(std::vector<float> target, float distanceTol)
+	std::vector<int> search(const std::vector<float>& target, const float& distTol)
 	{
 		std::vector<int> ids;
 
-		searchHelper(target, root, 0, distanceTol, ids);
+		searchHelper(target, root, 0, distTol, ids, target.size());
 
 		return ids;
 	}
 
-	void searchHelper(const std::vector<float> &target, Node *node, int depth, const float &distanceTol, std::vector<int> &ids)
+	void searchHelper(const std::vector<float> &target, Node *node, int depth, const float &distTol, std::vector<int> &ids, const int& kDim)
 	{
-		// 以target 為正方形中心，2倍distanceTol為正方形邊長，確認node是否在該正方形中
+		// 以target 為正方形中心，2倍distTol為正方形邊長，確認node是否在該正方形中
 		if (node != nullptr)
 		{
-			if ((node->point[0] >= target[0] - distanceTol) && (node->point[0] <= target[0] + distanceTol) && (node->point[1] >= target[1] - distanceTol) && (node->point[1] <= target[1] + distanceTol))
+			if ((node->point[0] >= target[0] - distTol) && (node->point[0] <= target[0] + distTol) && (node->point[1] >= target[1] - distTol) && (node->point[1] <= target[1] + distTol))
 			{
 				float dist = sqrt(pow((node->point[0] - target[0]), 2) + pow((node->point[1] - target[1]), 2));
-				if (dist <= distanceTol)
+				if (dist <= distTol)
 					ids.push_back(node->id);
 			}
 
-			// 之後該往左還是右分支走
-			uint8_t idx = depth & 1;
-			if (target[idx] - distanceTol < node->point[idx])
-				searchHelper(target, node->left, depth + 1, distanceTol, ids);
-			if (target[idx] + distanceTol > node->point[idx])
-				searchHelper(target, node->right, depth + 1, distanceTol, ids);
+			// check left or right branch
+			uint8_t idx = depth % kDim;
+			if (target[idx] - distTol < node->point[idx])
+				searchHelper(target, node->left, depth + 1, distTol, ids, kDim);
+			if (target[idx] + distTol > node->point[idx])
+				searchHelper(target, node->right, depth + 1, distTol, ids, kDim);
 		}
 	}
 };
