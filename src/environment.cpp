@@ -54,7 +54,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
 
     // TODO:: Create point processor
     ProcessPointClouds<pcl::PointXYZ> pcdProcesser;
-    std::pair<typename pcl::PointCloud<pcl::PointXYZ>::Ptr, typename pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = pcdProcesser.SegmentPlane(pcd, 25, 0.3);
+    std::pair<typename pcl::PointCloud<pcl::PointXYZ>::Ptr, typename pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = pcdProcesser.projectSegmentPlane(pcd, 25, 0.3);
     // renderPointCloud(viewer, segmentCloud.first, "obstacle", Color(1, 0, 0));
     renderPointCloud(viewer, segmentCloud.second, "plane", Color(0, 1, 0));
 
@@ -84,7 +84,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, ProcessPointCloud
     // ----------------------------------------------------
 
     inputCloud = pointProcessor.FilterCloud(inputCloud, 0.3, Eigen::Vector4f(-10, -5, -2, 1), Eigen::Vector4f(30, 8, 1, 1));
-    std::pair<typename pcl::PointCloud<pcl::PointXYZI>::Ptr, typename pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.SegmentPlane(inputCloud, 25, 0.3);
+    std::pair<typename pcl::PointCloud<pcl::PointXYZI>::Ptr, typename pcl::PointCloud<pcl::PointXYZI>::Ptr> segmentCloud = pointProcessor.projectSegmentPlane(inputCloud, 25, 0.3);
 
     /* Clustering */
     std::vector<typename pcl::PointCloud<pcl::PointXYZI>::Ptr> clusters = pointProcessor.Clustering(segmentCloud.first, 0.6, 10, 500);
