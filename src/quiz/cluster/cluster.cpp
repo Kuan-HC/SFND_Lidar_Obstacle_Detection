@@ -142,6 +142,9 @@ int main()
 	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 	std::cout << "clustering found " << clusters.size() << " and took " << elapsedTime.count() << " milliseconds" << std::endl;
 
+	delete tree;
+	std::cout << "KDtree delete"<<std::endl;
+
 	// Render clusters
 	int clusterId = 0;
 	std::vector<Color> colors = {Color(1, 0, 0), Color(0, 1, 0), Color(0, 0, 1)};

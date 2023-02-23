@@ -18,8 +18,10 @@ struct Node
 
 	~Node()
 	{
-		delete left;
-		delete right;
+		if(left != nullptr)
+			delete left;
+		if(right != nullptr)
+			delete right;
 	}
 };
 
@@ -32,7 +34,8 @@ struct KdTree
 
 	~KdTree()
 	{
-		delete root;
+		if(root != nullptr)
+			delete root;
 	}
 
 	void insertHelper(Node *&node, uint32_t depth, const std::vector<float>& point, const int& id, const int& kDim)
