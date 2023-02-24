@@ -82,12 +82,12 @@ void proximity(const std::vector<std::vector<float>> &points, std::vector<int> &
 	}
 }
 
-std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>> &points, KdTree *&tree, float distanceTol)
+std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>> &points, KdTree *&tree, const float &distanceTol)
 {
 	// TODO: Fill out this function to return list of indices for each cluster
 	std::vector<std::vector<int>> clusters;
 	int &&len = points.size();
-	std::vector<bool> visted(points.size(), false);
+	std::vector<bool> visted(len, false);
 
 	for (int i = 0; i < len; ++i)
 	{
@@ -143,7 +143,6 @@ int main()
 	std::cout << "clustering found " << clusters.size() << " and took " << elapsedTime.count() << " milliseconds" << std::endl;
 
 	delete tree;
-	std::cout << "KDtree delete"<<std::endl;
 
 	// Render clusters
 	int clusterId = 0;

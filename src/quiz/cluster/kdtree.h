@@ -18,9 +18,9 @@ struct Node
 
 	~Node()
 	{
-		if(left != nullptr)
+		if (left != nullptr)
 			delete left;
-		if(right != nullptr)
+		if (right != nullptr)
 			delete right;
 	}
 };
@@ -34,11 +34,12 @@ struct KdTree
 
 	~KdTree()
 	{
-		if(root != nullptr)
+		if (root != nullptr)
 			delete root;
+		std::cout << "[+] KDtree delete" << std::endl;
 	}
 
-	void insertHelper(Node *&node, uint32_t depth, const std::vector<float>& point, const int& id, const int& kDim)
+	void insertHelper(Node *&node, uint32_t depth, const std::vector<float> &point, const int &id, const int &kDim)
 	{
 		if (node == nullptr)
 			node = new Node(point, id);
@@ -53,7 +54,7 @@ struct KdTree
 		}
 	}
 
-	void insert(const std::vector<float>& point, const int& id)
+	void insert(const std::vector<float> &point, const int &id)
 	{
 		// TODO: Fill in this function to insert a new point into the tree
 		// the function should create a new node and place correctly with in the root
@@ -61,7 +62,7 @@ struct KdTree
 	}
 
 	// return a list of point ids in the tree that are within distance of target
-	std::vector<int> search(const std::vector<float>& target, const float& distTol)
+	std::vector<int> search(const std::vector<float> &target, const float &distTol)
 	{
 		std::vector<int> ids;
 
@@ -70,17 +71,25 @@ struct KdTree
 		return ids;
 	}
 
-	void searchHelper(const std::vector<float> &target, Node *node, int depth, const float &distTol, std::vector<int> &ids, const int& kDim)
+	void searchHelper(const std::vector<float> &target, Node *node, int depth, const float &distTol, std::vector<int> &ids, const int &kDim)
 	{
-		// 以target 為正方形中心，2倍distTol為正方形邊長，確認node是否在該正方形中
+		// take target as the center and draw a square to check if node is inside of the square
 		if (node != nullptr)
 		{
-			if ((node->point[0] >= target[0] - distTol) && (node->point[0] <= target[0] + distTol) && (node->point[1] >= target[1] - distTol) && (node->point[1] <= target[1] + distTol))
+			bool inside = true;
+			float dist = 0.0f;
+			for (int i = 0; i < kDim; ++i)
 			{
-				float dist = sqrt(pow((node->point[0] - target[0]), 2) + pow((node->point[1] - target[1]), 2));
-				if (dist <= distTol)
-					ids.push_back(node->id);
+				dist += pow((node->point[i] - target[i]), 2);
+				if ((node->point[i] < target[i] - distTol) || (node->point[i] > target[i] + distTol))
+				{
+					inside = false;
+					break;
+				}
 			}
+
+			if (inside == true && sqrt(dist) <= distTol)
+				ids.push_back(node->id);
 
 			// check left or right branch
 			uint8_t idx = depth % kDim;

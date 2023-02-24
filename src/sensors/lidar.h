@@ -126,7 +126,7 @@ struct Lidar
 			ray.rayCast(cars, minDistance, maxDistance, cloud, groundSlope, sderr);
 		auto endTime = std::chrono::steady_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-		cout << "ray casting took " << elapsedTime.count() << " milliseconds" << endl;
+		cout << "[+] Lidar scan took " << elapsedTime.count() << " milliseconds" << endl;
 		cloud->width = cloud->points.size();
 		cloud->height = 1; // one dimensional unorganized point cloud dataset
 		return cloud;

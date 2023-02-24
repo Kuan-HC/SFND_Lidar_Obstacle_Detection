@@ -20,12 +20,17 @@
 #include "render/box.h"
 #include <unordered_set>
 #include <time.h>
+#include "quiz/cluster/kdtree.h"
 
 template <typename PointT>
 class ProcessPointClouds
 {
 protected:
     std::vector<int> RansacPlane(const typename pcl::PointCloud<PointT>::Ptr &cloud, int maxIterations, const float &distanceTol);
+
+    void proximity(typename pcl::PointCloud<PointT>::Ptr cloud, std::vector<int> &cluster, std::vector<bool> &visted, const int &id, KdTree *&tree, const float &distanceTol);
+
+    std::vector<std::vector<int>> euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree *&tree, const float &distTol, const int &minSize, const int &maxSize);
 
 public:
     // constructor
@@ -43,7 +48,9 @@ public:
 
     std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> pclSegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold);
 
-    std::vector<typename pcl::PointCloud<PointT>::Ptr> pclClustering(typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize);
+    std::vector<typename pcl::PointCloud<PointT>::Ptr> pclClustering(typename pcl::PointCloud<PointT>::Ptr cloud, const float &clusterTolerance, const int &minSize, const int &maxSize);
+
+    std::vector<typename pcl::PointCloud<PointT>::Ptr> projectClustering(typename pcl::PointCloud<PointT>::Ptr cloud, const float &clusterTolerance, const int &minSize, const int &maxSize);
 
     Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
